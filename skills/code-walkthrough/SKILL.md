@@ -15,6 +15,7 @@ description: Use when the user wants to UNDERSTAND existing code (especially AI-
 3. **确认严格按优先级提问:① 对齐意图 > ③ 标记存疑 > ④ 扫盲 > ②(可选)反向检验**。
 4. **引擎不认识任何具体技术栈**。栈相关知识全部来自 `references/packs/**`(按需加载)。
 5. **每次只确认一个点**,且**凡能归成有限选项的提问,必须用 `AskUserQuestion` 工具呈现可点选选项**,绝不把"确认点 1/2/3"堆成一段纯文本让用户打字。详见下方「用选择式提问」。
+6. **提问后必须停下等用户真正回答,才能继续**。在用户回答当前确认之前,**禁止**:讲下一段、写/改笔记、动存疑清单、读下一个文件。纯文本提问不构成"等待"——所以确认必须走 `AskUserQuestion`(它会阻塞并等用户点选)。存疑点是否入清单、记成什么状态,**由用户的裁决决定**,不能模型自己拍板写进去。
 
 ## 流程
 
@@ -52,7 +53,8 @@ description: Use when the user wants to UNDERSTAND existing code (especially AI-
 3. **用户响应** → 确认(记入笔记)/ 追问(展开)/ 跳转(放下路线去别处,之后回来)。
 
 ### [沉淀]
-每聊完一个模块:
+**前置条件:本段/本模块的确认点都已由用户通过 `AskUserQuestion` 回答完毕。** 用户还没回答就**不准**进入本阶段。
+满足后,每聊完一个模块:
 - 按 `references/note-template.md` 写/**增量更新** `docs/walkthrough/<模块名>.md`,
   把"已确认意图"落到主链路对应步骤下。
 - 把本轮标记的存疑点**追加**到 `docs/walkthrough/_open-questions.md`。
